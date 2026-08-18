@@ -1,0 +1,14 @@
+services:
+  playwright-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - TEST_ENV=dev
+      - CI=true
+    volumes:
+      - ./playwright-report:/app/playwright-report
+      - ./test-results:/app/test-results
+      - ./logs:/app/logs
+    ipc: host
+    command: npm test

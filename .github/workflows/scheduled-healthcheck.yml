@@ -1,0 +1,40 @@
+name: Scheduled Synthetic Health Check
+
+on:
+  schedule:
+    # Run every day at 06:00 UTC
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  healthcheck:
+    name: Production Synthetic Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run API & Critical E2E Tests
+        env:
+          TEST_ENV: prod
+          CI: true
+        run: npm run test:api && npx playwright test tests/e2e/login.spec.ts
+
+      - name: Upload Health Check Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: healthcheck-report
+          path: playwright-report/
+          retention-days: 7

@@ -1,0 +1,119 @@
+# 🎭 Enterprise Playwright Test Automation Framework
+
+An enterprise-ready, turn-key test automation framework built with **TypeScript**, **Playwright**, **Axe-core**, **Zod**, and **Faker.js**, designed to support rapid client onboarding across Web UI, REST APIs, Visual Regression, and Accessibility testing.
+
+---
+
+## 🌟 Key Features
+
+- 🏗️ **Modular Architecture**: Page Object Model (POM) + Component Object Model (COM) with custom resilient action wrappers.
+- 🔌 **Unified REST API Client**: Built-in request builder, automatic Bearer/API-key token management, response latency tracking, and Zod response schema validation.
+- 🔄 **Hybrid Test Workflows**: Seed test data via API $\rightarrow$ execute actions via UI $\rightarrow$ verify via API $\rightarrow$ automated teardown.
+- 👁️ **Visual Regression Testing**: Pixelmatch snapshot comparison with element masking for dynamic content.
+- ♿ **Accessibility (A11y) Audits**: Automated WCAG 2.1 AA scans powered by `@axe-core/playwright`.
+- 🌐 **Multi-Environment Support**: Type-safe `.env` parsing (`dev`, `staging`, `prod`, `local`) with Zod validation.
+- ⚡ **Session Reuse**: Global `storageState` caching to eliminate repetitive login steps in E2E suites.
+- 🎲 **Dynamic Synthetic Data**: Faker.js data factory producing realistic test models on demand.
+- 📊 **Rich Observability**: Winston structured logging with Playwright `test.step()` breadcrumbs, HTML reports, JUnit XML, screenshots, and trace viewer on failure.
+- 🚀 **CI/CD & Docker Ready**: Pre-configured GitHub Actions matrix sharding workflows and Docker Compose.
+
+---
+
+## 📂 Project Architecture
+
+```
+playwright-framework/
+├── .github/workflows/         # CI/CD & Scheduled Synthetic checks
+├── config/
+│   ├── env.config.ts          # Zod-validated environment config
+│   └── client.config.ts       # Client endpoints & configuration overrides
+├── src/
+│   ├── api/
+│   │   ├── client/            # ApiClient & RequestBuilder
+│   │   ├── schemas/           # Zod schema validation models
+│   │   └── services/          # Domain API services (Auth, User)
+│   ├── core/
+│   │   ├── data-generators/   # Faker test data factories
+│   │   ├── logger/            # Winston structured logger
+│   │   └── utils/             # Date, String, Wait utilities
+│   ├── fixtures/              # Custom Playwright test fixture extensions
+│   ├── helpers/               # A11y, Visual snapshot, Network mocking helpers
+│   ├── pages/                 # POM & COM page/component classes
+│   └── types/                 # TypeScript type declarations
+├── tests/
+│   ├── setup/                 # Global authentication setup
+│   ├── e2e/                   # Web UI E2E test suites
+│   ├── api/                   # REST API test suites
+│   ├── hybrid/                # Hybrid E2E + API test suites
+│   ├── visual/                # Visual regression test suites
+│   └── accessibility/         # WCAG 2.1 AA audit test suites
+├── Dockerfile                 # Containerized test runner
+├── docker-compose.yml         # Compose runner
+├── playwright.config.ts       # Root Playwright configuration
+└── tsconfig.json              # TypeScript configuration with aliases
+```
+
+---
+
+## 🚀 Getting Started
+
+### 1. Prerequisites
+- Node.js >= 18 (Node 22+ recommended)
+- npm or yarn
+
+### 2. Installation
+```bash
+npm install
+npx playwright install --with-deps chromium
+```
+
+### 3. Running Test Suites
+
+```bash
+# Run all tests
+npm test
+
+# Open interactive Playwright UI Mode
+npm run test:ui
+
+# Run only REST API test suite
+npm run test:api
+
+# Run only Web UI E2E test suite
+npm run test:e2e
+
+# Run Hybrid (API Seed -> UI Verify) suite
+npm run test:hybrid
+
+# Run Visual Regression tests
+npm run test:visual
+
+# Run Accessibility (a11y) scans
+npm run test:a11y
+
+# Run against Staging environment
+npm run test:staging
+
+# View HTML Test Report
+npm run report
+```
+
+---
+
+## 🧭 Onboarding a New Client
+
+Refer to the [Client Onboarding Guide](file:///home/leroysharp/Documents/Github/playwright-framework/CLIENT_ONBOARDING.md) for a 4-step walkthrough on pointing this framework to any new website or API in under 5 minutes.
+
+---
+
+## 🐳 Docker Execution
+
+```bash
+# Run tests inside Docker
+docker-compose up --build
+```
+
+---
+
+## 📜 License
+MIT

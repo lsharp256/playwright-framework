@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Playwright Test Artifacts
+test-results/
+playwright-report/
+playwright/.cache/
+blob-report/
+allure-results/
+allure-report/
+
+# Authentication storage state
+.auth/
+
+# Environment files
+.env
+.env.local
+!.env.example
+!.env.dev
+!.env.staging
+!.env.prod
+
+# Logs
+logs/
+*.log
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
