@@ -20,6 +20,8 @@ export default defineConfig({
     ['html', { outputFolder: 'playwright-report', open: 'never' }],
     ['json', { outputFile: 'test-results/results.json' }],
     ['junit', { outputFile: 'test-results/junit.xml' }],
+    ['allure-playwright', { outputFolder: 'allure-results', detail: true }],
+    ['./src/reporting/reporters/EnterprisePlaywrightReporter.ts'],
   ],
   use: {
     baseURL: ENV.BASE_URL,

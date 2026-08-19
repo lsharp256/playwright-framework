@@ -12,11 +12,14 @@ An enterprise-ready, turn-key test automation framework built with **TypeScript*
 - 👁️ **Visual Regression Testing**: Pixelmatch snapshot comparison with element masking for dynamic content.
 - ♿ **Accessibility (A11y) Audits**: Automated WCAG 2.1 AA scans powered by `@axe-core/playwright`.
 - ⚡ **Load & Performance Testing**: High-throughput REST API load runner, multi-browser synthetic journey load tests, Artillery integration, percentile latency tracking (p50/p90/p95/p99), and SLA validation.
+- 📈 **Historical Analytics & Flakiness Intelligence**: Persistent cross-run history tracking, automatic detection of **Frequently Failing Tests** and **Flaky Tests**, and interactive trend analytics.
+- 📢 **Slack & Microsoft Teams CI/CD Alerts**: Real-time rich Block Kit and Adaptive Card notifications with run metrics, failure summaries, and direct artifact links.
+- 📊 **Rich Multi-Layer Reporting**: Standard Playwright HTML report, **Allure 2.0 Reports**, interactive **Historical Health Dashboard**, and JUnit XML.
 - 🌐 **Multi-Environment Support**: Type-safe `.env` parsing (`dev`, `staging`, `prod`, `local`) with Zod validation.
 - ⚡ **Session Reuse**: Global `storageState` caching to eliminate repetitive login steps in E2E suites.
 - 🎲 **Dynamic Synthetic Data**: Faker.js data factory producing realistic test models on demand.
 - 📊 **Rich Observability**: Winston structured logging with Playwright `test.step()` breadcrumbs, HTML reports, JUnit XML, screenshots, and trace viewer on failure.
-- 🚀 **CI/CD & Docker Ready**: Pre-configured GitHub Actions matrix sharding workflows and Docker Compose.
+- 🚀 **CI/CD & Docker Ready**: Pre-configured GitHub Actions matrix sharding workflows, history caching, and Docker Compose.
 
 ---
 
@@ -24,10 +27,10 @@ An enterprise-ready, turn-key test automation framework built with **TypeScript*
 
 ```
 playwright-framework/
-├── .github/workflows/         # CI/CD & Scheduled Synthetic & Load workflows
+├── .github/workflows/         # CI/CD, Scheduled Synthetic & Load workflows
 ├── config/
 │   ├── env.config.ts          # Zod-validated environment config
-│   └── client.config.ts       # Client endpoints, SLAs & configuration overrides
+│   └── client.config.ts       # Client endpoints, SLAs & notification overrides
 ├── src/
 │   ├── api/
 │   │   ├── client/            # ApiClient & RequestBuilder
@@ -41,6 +44,7 @@ playwright-framework/
 │   ├── helpers/               # A11y, Visual snapshot, Network mocking helpers
 │   ├── pages/                 # POM & COM page/component classes
 │   ├── performance/           # Load runner, metrics, SLA validator & HTML reporters
+│   ├── reporting/             # Historical tracker, Slack/Teams notifiers, Allure & Dashboard
 │   └── types/                 # TypeScript type declarations
 ├── tests/
 │   ├── setup/                 # Global authentication setup
@@ -117,8 +121,18 @@ npm run test:load:artillery:report
 # Run against Staging environment
 npm run test:staging
 
-# View HTML Test Report
+# --- Rich Reporting & Notifications ---
+# Open standard Playwright HTML Report
 npm run report
+
+# Generate and view Allure Report
+npm run report:allure
+
+# View Historical Flakiness & Failure Trends Dashboard
+npm run report:history
+
+# Test dispatch Slack / Microsoft Teams CI notifications
+npm run notify
 ```
 
 ---

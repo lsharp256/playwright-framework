@@ -8,6 +8,7 @@ playwright/.cache/
 blob-report/
 allure-results/
 allure-report/
+.test-history/
 
 # Authentication storage state
 .auth/

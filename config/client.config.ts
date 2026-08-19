@@ -43,6 +43,11 @@ export interface ClientConfig {
     };
     defaultProfile: 'smoke' | 'load' | 'stress' | 'spike';
   };
+  notifications: {
+    slackEnabled: boolean;
+    teamsEnabled: boolean;
+    notifyOnFailureOnly: boolean;
+  };
 }
 
 export const clientConfig: ClientConfig = {
@@ -83,5 +88,10 @@ export const clientConfig: ClientConfig = {
       minThroughputRps: 5,
     },
     defaultProfile: 'load',
+  },
+  notifications: {
+    slackEnabled: Boolean(ENV.SLACK_WEBHOOK_URL),
+    teamsEnabled: Boolean(ENV.TEAMS_WEBHOOK_URL),
+    notifyOnFailureOnly: ENV.NOTIFY_ON_FAILURE_ONLY,
   },
 };

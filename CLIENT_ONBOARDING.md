@@ -133,9 +133,25 @@ cross-env TEST_ENV=staging npm run test:load:api
 npm run test:load:stress -- --vus=50 --duration=60
 ```
 
+### Step 6: Configure Slack & Microsoft Teams CI Alerts
+
+Add your webhook URLs to `.env.dev` or GitHub repository Secrets:
+
+```ini
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/...
+TEAMS_WEBHOOK_URL=https://outlook.office.com/webhook/...
+SLACK_CHANNEL=#qa-alerts
+NOTIFY_ON_FAILURE_ONLY=false
+```
+
+Test dispatching a notification:
+```bash
+npm run notify
+```
+
 ---
 
-## 🛠️ Running Tests
+## 🛠️ Running Tests & Reports
 
 | Command | Purpose |
 |---|---|
@@ -152,6 +168,9 @@ npm run test:load:stress -- --vus=50 --duration=60
 | `npm run test:load:stress` | Run ramp-up stress testing profile |
 | `npm run test:load:spike` | Run traffic spike load test profile |
 | `npm run test:load:artillery` | Run Artillery YAML load scenario |
+| `npm run report` | Open the HTML Playwright test report |
+| `npm run report:allure` | Generate and open Allure Report |
+| `npm run report:history` | View Historical Flakiness & Failure Trends Dashboard |
+| `npm run notify` | Dispatch Slack & Teams test execution alerts |
 | `npm run test:dev` | Run suite against Dev environment |
 | `npm run test:staging` | Run suite against Staging environment |
-| `npm run report` | Open the HTML Playwright test report |
