@@ -1,0 +1,57 @@
+config:
+  target: "https://dummyjson.com"
+  phases:
+    - duration: 5
+      arrivalRate: 2
+      rampTo: 10
+      name: "Warm up and Ramp up"
+    - duration: 10
+      arrivalRate: 10
+      name: "Sustained Peak Load"
+  processor: "./artillery-processor.cjs"
+  defaults:
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+      X-Client-Version: "1.0.0"
+      X-Framework: "Playwright-Enterprise"
+  ensure:
+    p95: 1500
+    maxErrorRate: 2
+
+scenarios:
+  - name: "Auth and User CRUD Transaction Flow"
+    flow:
+      # Step 1: Login
+      - post:
+          url: "/auth/login"
+          json:
+            username: "emilys"
+            password: "emilyspass"
+            expiresInMins: 30
+          capture:
+            - json: "$.accessToken"
+              as: "authToken"
+      # Step 2: Fetch Users List
+      - get:
+          url: "/users"
+          qs:
+            limit: 5
+            skip: 0
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+      # Step 3: Fetch User by ID
+      - get:
+          url: "/users/1"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+      # Step 4: Add New User
+      - post:
+          url: "/users/add"
+          beforeRequest: "generateUserData"
+          json:
+            firstName: "{{ firstName }}"
+            lastName: "{{ lastName }}"
+            age: "{{ age }}"
+          headers:
+            Authorization: "Bearer {{ authToken }}"

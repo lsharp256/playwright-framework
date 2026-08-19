@@ -4,6 +4,7 @@ import { ApiResponse, RequestOptions } from '../../types/global.js';
 import { Logger } from '../../core/logger/logger.js';
 import { clientConfig } from '../../../config/client.config.js';
 import { ENV } from '../../../config/env.config.js';
+import type { MetricCollector } from '../../performance/core/MetricCollector.js';
 
 export class ApiClient {
   private request: APIRequestContext;
@@ -11,6 +12,8 @@ export class ApiClient {
   private authToken?: string;
   private defaultHeaders: Record<string, string>;
   private logger: Logger;
+  private metricCollector?: MetricCollector;
+  private vuId?: number;
 
   constructor(
     request: APIRequestContext,
@@ -24,6 +27,15 @@ export class ApiClient {
       ...customHeaders,
     };
     this.logger = new Logger('ApiClient');
+  }
+
+  /**
+   * Attaches a MetricCollector for performance and load test metrics
+   */
+  setMetricCollector(collector?: MetricCollector, vuId?: number): this {
+    this.metricCollector = collector;
+    this.vuId = vuId;
+    return this;
   }
 
   /**
@@ -99,6 +111,18 @@ export class ApiClient {
         ignoreHTTPSErrors: options.ignoreHTTPSErrors ?? false,
       });
     } catch (error) {
+      if (this.metricCollector) {
+        this.metricCollector.recordRequest({
+          endpoint,
+          method,
+          statusCode: 0,
+          durationMs: Date.now() - startTime,
+          timestamp: startTime,
+          success: false,
+          error: (error as Error).message,
+          vuId: this.vuId ?? 1,
+        });
+      }
       this.logger.error(`Network Error during ${method} ${url}: ${(error as Error).message}`);
       throw error;
     }
@@ -106,6 +130,19 @@ export class ApiClient {
     const durationMs = Date.now() - startTime;
     const status = rawResponse.status();
     const statusText = rawResponse.statusText();
+
+    if (this.metricCollector) {
+      this.metricCollector.recordRequest({
+        endpoint,
+        method,
+        statusCode: status,
+        durationMs,
+        timestamp: startTime,
+        success: status >= 200 && status < 400,
+        error: status >= 400 ? `HTTP ${status} ${statusText}` : undefined,
+        vuId: this.vuId ?? 1,
+      });
+    }
 
     let data: any = null;
     const contentType = rawResponse.headers()['content-type'] || '';

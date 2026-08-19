@@ -1,0 +1,93 @@
+name: Performance & Load Testing Suite
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_type:
+        description: 'Load Test Scope (api, browser, all, artillery)'
+        required: true
+        default: 'api'
+        type: choice
+        options:
+          - api
+          - browser
+          - all
+          - artillery
+      profile:
+        description: 'Traffic Profile (smoke, load, stress, spike)'
+        required: true
+        default: 'load'
+        type: choice
+        options:
+          - smoke
+          - load
+          - stress
+          - spike
+      vus:
+        description: 'Number of Virtual Users (e.g. 10, 25, 50)'
+        required: false
+        default: '10'
+      duration:
+        description: 'Test Duration in seconds (e.g. 20, 60, 120)'
+        required: false
+        default: '20'
+      environment:
+        description: 'Target Environment (dev, staging, prod)'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+  schedule:
+    # Run weekly on Sundays at 02:00 UTC
+    - cron: '0 2 * * 0'
+
+jobs:
+  performance-test:
+    name: Execute Load Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers with OS Dependencies
+        if: ${{ github.event.inputs.test_type == 'browser' || github.event.inputs.test_type == 'all' }}
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Native Performance Suite
+        if: ${{ github.event.inputs.test_type != 'artillery' }}
+        env:
+          TEST_ENV: ${{ github.event.inputs.environment || 'dev' }}
+        run: |
+          npm run test:load -- --type=${{ github.event.inputs.test_type || 'api' }} --profile=${{ github.event.inputs.profile || 'load' }} --vus=${{ github.event.inputs.vus || '10' }} --duration=${{ github.event.inputs.duration || '20' }}
+
+      - name: Run Artillery Performance Suite
+        if: ${{ github.event.inputs.test_type == 'artillery' }}
+        run: |
+          npm run test:load:artillery
+          npm run test:load:artillery:report
+
+      - name: Upload Performance Report Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-load-reports
+          path: |
+            test-results/load-report.html
+            test-results/load-results.json
+            test-results/artillery-report.html
+            test-results/artillery-report.json
+          retention-days: 30

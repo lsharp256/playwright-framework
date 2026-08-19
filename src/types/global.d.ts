@@ -20,8 +20,11 @@ export interface ApiResponse<T = any> {
 }
 
 export interface UserCredentials {
-  email: string;
+  email?: string;
+  username?: string;
   password: string;
+  expiresInMins?: number;
+  [key: string]: any;
 }
 
 export interface TestUser {

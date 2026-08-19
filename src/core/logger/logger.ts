@@ -54,20 +54,35 @@ export class Logger {
   }
 
   /**
-   * Executes an action inside a Playwright test.step and logs the step description.
+   * Executes an action inside a Playwright test.step (if in test runner) and logs the step description.
    */
   async step<T>(stepName: string, action: () => Promise<T>): Promise<T> {
     this.info(`➡️ STEP: ${stepName}`);
-    return await test.step(stepName, async () => {
-      try {
-        const result = await action();
-        this.info(`✔️ COMPLETED: ${stepName}`);
-        return result;
-      } catch (error) {
-        this.error(`❌ FAILED: ${stepName} - ${(error as Error).message}`);
-        throw error;
+    try {
+      if (test.info()) {
+        return await test.step(stepName, async () => {
+          try {
+            const result = await action();
+            this.info(`✔️ COMPLETED: ${stepName}`);
+            return result;
+          } catch (error) {
+            this.error(`❌ FAILED: ${stepName} - ${(error as Error).message}`);
+            throw error;
+          }
+        });
       }
-    });
+    } catch {
+      // Outside Playwright test worker context (e.g. standalone load runner)
+    }
+
+    try {
+      const result = await action();
+      this.info(`✔️ COMPLETED: ${stepName}`);
+      return result;
+    } catch (error) {
+      this.error(`❌ FAILED: ${stepName} - ${(error as Error).message}`);
+      throw error;
+    }
   }
 }
 

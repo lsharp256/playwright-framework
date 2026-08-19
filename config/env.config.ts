@@ -26,6 +26,12 @@ const envSchema = z.object({
   CAPTURE_HAR: z.preprocess((val) => val === 'true' || val === true, z.boolean()).default(false),
   VIEWPORT_WIDTH: z.preprocess((val) => (val ? Number(val) : 1920), z.number()).default(1920),
   VIEWPORT_HEIGHT: z.preprocess((val) => (val ? Number(val) : 1080), z.number()).default(1080),
+  // Performance & Load Testing Parameters
+  LOAD_TEST_VUS: z.preprocess((val) => (val ? Number(val) : 10), z.number()).default(10),
+  LOAD_TEST_DURATION: z.preprocess((val) => (val ? Number(val) : 20), z.number()).default(20),
+  LOAD_TEST_RAMP_UP: z.preprocess((val) => (val ? Number(val) : 5), z.number()).default(5),
+  LOAD_TEST_SLA_P95_MS: z.preprocess((val) => (val ? Number(val) : 1000), z.number()).default(1000),
+  LOAD_TEST_SLA_ERROR_RATE: z.preprocess((val) => (val ? Number(val) : 1.0), z.number()).default(1.0),
 });
 
 const parseEnv = () => {

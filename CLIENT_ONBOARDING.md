@@ -108,6 +108,33 @@ test.describe('My Feature E2E Flow', () => {
 
 ---
 
+### Step 5: Configure Load Testing & Target SLAs
+
+Define performance SLAs and default concurrency profiles in `config/client.config.ts`:
+
+```typescript
+performance: {
+  targetSla: {
+    p95MaxMs: 500,           // P95 latency must stay under 500ms
+    p99MaxMs: 1200,          // P99 latency must stay under 1200ms
+    maxErrorRatePercent: 0.5,// Max 0.5% errors allowed under load
+    minThroughputRps: 50,    // Target minimum 50 requests/sec
+  },
+  defaultProfile: 'load',
+}
+```
+
+Run load tests or customize virtual user counts:
+```bash
+# Run API load test against client staging
+cross-env TEST_ENV=staging npm run test:load:api
+
+# Run stress profile (ramp up to 3x concurrency)
+npm run test:load:stress -- --vus=50 --duration=60
+```
+
+---
+
 ## 🛠️ Running Tests
 
 | Command | Purpose |
@@ -119,6 +146,12 @@ test.describe('My Feature E2E Flow', () => {
 | `npm run test:hybrid` | Run API seed $\rightarrow$ UI verify tests |
 | `npm run test:visual` | Run Visual snapshot regression tests |
 | `npm run test:a11y` | Run WCAG accessibility compliance scans |
+| `npm run test:load` | Run default Load & Performance test suite |
+| `npm run test:load:api` | Run REST API high-throughput load tests |
+| `npm run test:load:browser` | Run multi-user browser journey load tests |
+| `npm run test:load:stress` | Run ramp-up stress testing profile |
+| `npm run test:load:spike` | Run traffic spike load test profile |
+| `npm run test:load:artillery` | Run Artillery YAML load scenario |
 | `npm run test:dev` | Run suite against Dev environment |
 | `npm run test:staging` | Run suite against Staging environment |
-| `npm run report` | Open the HTML test report |
+| `npm run report` | Open the HTML Playwright test report |

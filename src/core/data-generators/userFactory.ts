@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { TestUser, UserCredentials } from '../../types/global.js';
+import { TestUser } from '../../types/global.js';
 import { StringUtils } from '../utils/stringUtils.js';
 
 export class UserFactory {
@@ -31,7 +31,7 @@ export class UserFactory {
   /**
    * Generates standard login credentials
    */
-  static generateCredentials(): UserCredentials {
+  static generateCredentials(): { email: string; password: string } {
     return {
       email: faker.internet.email().toLowerCase(),
       password: StringUtils.randomPassword(),

@@ -11,6 +11,7 @@ An enterprise-ready, turn-key test automation framework built with **TypeScript*
 - 🔄 **Hybrid Test Workflows**: Seed test data via API $\rightarrow$ execute actions via UI $\rightarrow$ verify via API $\rightarrow$ automated teardown.
 - 👁️ **Visual Regression Testing**: Pixelmatch snapshot comparison with element masking for dynamic content.
 - ♿ **Accessibility (A11y) Audits**: Automated WCAG 2.1 AA scans powered by `@axe-core/playwright`.
+- ⚡ **Load & Performance Testing**: High-throughput REST API load runner, multi-browser synthetic journey load tests, Artillery integration, percentile latency tracking (p50/p90/p95/p99), and SLA validation.
 - 🌐 **Multi-Environment Support**: Type-safe `.env` parsing (`dev`, `staging`, `prod`, `local`) with Zod validation.
 - ⚡ **Session Reuse**: Global `storageState` caching to eliminate repetitive login steps in E2E suites.
 - 🎲 **Dynamic Synthetic Data**: Faker.js data factory producing realistic test models on demand.
@@ -23,10 +24,10 @@ An enterprise-ready, turn-key test automation framework built with **TypeScript*
 
 ```
 playwright-framework/
-├── .github/workflows/         # CI/CD & Scheduled Synthetic checks
+├── .github/workflows/         # CI/CD & Scheduled Synthetic & Load workflows
 ├── config/
 │   ├── env.config.ts          # Zod-validated environment config
-│   └── client.config.ts       # Client endpoints & configuration overrides
+│   └── client.config.ts       # Client endpoints, SLAs & configuration overrides
 ├── src/
 │   ├── api/
 │   │   ├── client/            # ApiClient & RequestBuilder
@@ -39,6 +40,7 @@ playwright-framework/
 │   ├── fixtures/              # Custom Playwright test fixture extensions
 │   ├── helpers/               # A11y, Visual snapshot, Network mocking helpers
 │   ├── pages/                 # POM & COM page/component classes
+│   ├── performance/           # Load runner, metrics, SLA validator & HTML reporters
 │   └── types/                 # TypeScript type declarations
 ├── tests/
 │   ├── setup/                 # Global authentication setup
@@ -46,7 +48,8 @@ playwright-framework/
 │   ├── api/                   # REST API test suites
 │   ├── hybrid/                # Hybrid E2E + API test suites
 │   ├── visual/                # Visual regression test suites
-│   └── accessibility/         # WCAG 2.1 AA audit test suites
+│   ├── accessibility/         # WCAG 2.1 AA audit test suites
+│   └── load/                  # REST API, Browser & Artillery load test scenarios
 ├── Dockerfile                 # Containerized test runner
 ├── docker-compose.yml         # Compose runner
 ├── playwright.config.ts       # Root Playwright configuration
@@ -90,6 +93,26 @@ npm run test:visual
 
 # Run Accessibility (a11y) scans
 npm run test:a11y
+
+# --- Performance & Load Testing ---
+# Run default API load test suite
+npm run test:load
+
+# Run only REST API high-throughput load tests
+npm run test:load:api
+
+# Run multi-user Browser journey load tests
+npm run test:load:browser
+
+# Run stress profile (gradually ramp up to 3x peak load)
+npm run test:load:stress
+
+# Run spike profile (sudden high-traffic burst)
+npm run test:load:spike
+
+# Run Artillery load test scenarios
+npm run test:load:artillery
+npm run test:load:artillery:report
 
 # Run against Staging environment
 npm run test:staging
