@@ -31,6 +31,7 @@ const envSchema = z.object({
   LOAD_TEST_DURATION: z.preprocess((val) => (val ? Number(val) : 20), z.number()).default(20),
   LOAD_TEST_RAMP_UP: z.preprocess((val) => (val ? Number(val) : 5), z.number()).default(5),
   LOAD_TEST_SLA_P95_MS: z.preprocess((val) => (val ? Number(val) : 1000), z.number()).default(1000),
+  LOAD_TEST_SLA_P99_MS: z.preprocess((val) => (val ? Number(val) : 2000), z.number()).default(2000),
   LOAD_TEST_SLA_ERROR_RATE: z.preprocess((val) => (val ? Number(val) : 1.0), z.number()).default(1.0),
   // Notifications & Reporting
   SLACK_WEBHOOK_URL: z.string().url().optional().or(z.literal('')),

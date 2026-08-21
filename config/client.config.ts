@@ -83,7 +83,7 @@ export const clientConfig: ClientConfig = {
   performance: {
     targetSla: {
       p95MaxMs: ENV.LOAD_TEST_SLA_P95_MS,
-      p99MaxMs: 2000,
+      p99MaxMs: ENV.LOAD_TEST_SLA_P99_MS,
       maxErrorRatePercent: ENV.LOAD_TEST_SLA_ERROR_RATE,
       minThroughputRps: 5,
     },

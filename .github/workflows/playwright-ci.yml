@@ -78,7 +78,7 @@ jobs:
             allure-report/
             test-results/historical-dashboard.html
             test-results/history/
-            test-results/load-report.html
+            test-results/load-report-*.html
           retention-days: 30
 
       - name: Upload Test Results on Failure

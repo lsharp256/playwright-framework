@@ -1,5 +1,5 @@
 module.exports = {
-  generateUserData: (context, events, done) => {
+  generateUserData: (requestParams, context, events, done) => {
     const randomId = Math.floor(Math.random() * 10000);
     context.vars.firstName = `ArtilleryUser_${randomId}`;
     context.vars.lastName = `Test_${randomId}`;

@@ -86,8 +86,8 @@ jobs:
         with:
           name: performance-load-reports
           path: |
-            test-results/load-report.html
-            test-results/load-results.json
+            test-results/load-report-*.html
+            test-results/load-results-*.json
             test-results/artillery-report.html
             test-results/artillery-report.json
           retention-days: 30

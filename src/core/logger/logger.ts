@@ -58,21 +58,25 @@ export class Logger {
    */
   async step<T>(stepName: string, action: () => Promise<T>): Promise<T> {
     this.info(`➡️ STEP: ${stepName}`);
+
+    let inTest = false;
     try {
-      if (test.info()) {
-        return await test.step(stepName, async () => {
-          try {
-            const result = await action();
-            this.info(`✔️ COMPLETED: ${stepName}`);
-            return result;
-          } catch (error) {
-            this.error(`❌ FAILED: ${stepName} - ${(error as Error).message}`);
-            throw error;
-          }
-        });
-      }
+      inTest = Boolean(test.info());
     } catch {
       // Outside Playwright test worker context (e.g. standalone load runner)
+    }
+
+    if (inTest) {
+      return await test.step(stepName, async () => {
+        try {
+          const result = await action();
+          this.info(`✔️ COMPLETED: ${stepName}`);
+          return result;
+        } catch (error) {
+          this.error(`❌ FAILED: ${stepName} - ${(error as Error).message}`);
+          throw error;
+        }
+      });
     }
 
     try {

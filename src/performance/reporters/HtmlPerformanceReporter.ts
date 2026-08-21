@@ -5,11 +5,19 @@ import { PerformanceTestResult } from '../types/performance.types.js';
 export class HtmlPerformanceReporter {
   static generateReport(
     result: PerformanceTestResult,
-    outputFilePath: string = 'test-results/load-report.html'
+    outputFilePath?: string
   ): string {
     const { scenarioName, profile, vus, summary, slaResult, startTime, endTime } = result;
 
-    const resolvedPath = path.resolve(process.cwd(), outputFilePath);
+    const scenarioSlug = scenarioName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+
+    const resolvedPath = path.resolve(
+      process.cwd(),
+      outputFilePath ?? `test-results/load-report-${scenarioSlug}.html`
+    );
     const outputDir = path.dirname(resolvedPath);
 
     if (!fs.existsSync(outputDir)) {
@@ -260,7 +268,7 @@ export class HtmlPerformanceReporter {
     fs.writeFileSync(resolvedPath, htmlContent, 'utf-8');
 
     // Also write JSON results
-    const jsonPath = path.join(outputDir, 'load-results.json');
+    const jsonPath = path.join(outputDir, `load-results-${scenarioSlug}.json`);
     fs.writeFileSync(jsonPath, JSON.stringify(result, null, 2), 'utf-8');
 
     return resolvedPath;

@@ -5,6 +5,7 @@ import { clientConfig } from '../../../config/client.config.js';
 import {
   ApiTaskFunction,
   BrowserTaskFunction,
+  BrowserWebVitals,
   LoadProfileType,
   LoadStage,
   LoadTestConfig,
@@ -105,10 +106,28 @@ export class LoadRunner {
       let iteration = 0;
       while (isRunning && vuId <= currentVus) {
         iteration++;
+        const iterationStart = Date.now();
+        const metricsBefore = this.collector.getMetrics().length;
         try {
           await task({ vuId, requestContext, iteration });
         } catch (error) {
-          this.logger.debug(`VU #${vuId} error in iteration ${iteration}: ${(error as Error).message}`);
+          const errorMessage = (error as Error).message;
+          this.logger.warn(`VU #${vuId} error in iteration ${iteration}: ${errorMessage}`);
+
+          const newMetrics = this.collector.getMetrics().slice(metricsBefore);
+          const failureAlreadyRecorded = newMetrics.some((m) => !m.success);
+          if (!failureAlreadyRecorded) {
+            this.collector.recordRequest({
+              endpoint: config.scenarioName,
+              method: 'TASK',
+              statusCode: 500,
+              durationMs: Date.now() - iterationStart,
+              timestamp: iterationStart,
+              success: false,
+              error: errorMessage,
+              vuId,
+            });
+          }
         }
 
         if (config.thinkTimeMs && config.thinkTimeMs > 0) {
@@ -163,7 +182,6 @@ export class LoadRunner {
         config.sla?.maxErrorRatePercent ?? clientConfig.performance.targetSla.maxErrorRatePercent,
       minThroughputRps:
         config.sla?.minThroughputRps ?? clientConfig.performance.targetSla.minThroughputRps,
-      ...config.sla,
     };
 
     const slaResult = SlaValidator.evaluate(summary, slaThresholds);
@@ -225,13 +243,14 @@ export class LoadRunner {
           const journeyStart = Date.now();
           let success = true;
           let errorMessage: string | undefined;
+          let webVitals: BrowserWebVitals;
 
           try {
-            await task({ vuId, page, iteration });
+            webVitals = (await task({ vuId, page, iteration })) || undefined;
           } catch (err) {
             success = false;
             errorMessage = (err as Error).message;
-            this.logger.debug(`Browser VU #${vuId} error in iteration ${iteration}: ${errorMessage}`);
+            this.logger.warn(`Browser VU #${vuId} error in iteration ${iteration}: ${errorMessage}`);
           }
 
           const durationMs = Date.now() - journeyStart;
@@ -256,6 +275,7 @@ export class LoadRunner {
             success,
             error: errorMessage,
             vuId,
+            webVitals,
           });
 
           if (config.thinkTimeMs && config.thinkTimeMs > 0) {
@@ -307,7 +327,6 @@ export class LoadRunner {
       p99MaxMs: config.sla?.p99MaxMs ?? 8000,
       maxErrorRatePercent: config.sla?.maxErrorRatePercent ?? 5.0,
       minThroughputRps: config.sla?.minThroughputRps ?? 0.5,
-      ...config.sla,
     };
 
     const slaResult = SlaValidator.evaluate(summary, slaThresholds);

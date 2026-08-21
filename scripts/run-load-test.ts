@@ -72,8 +72,8 @@ async function main() {
 
     const allPassed = results.every((r) => r.slaResult.passed);
 
-    console.info('\n📁 HTML Performance Report saved to: test-results/load-report.html');
-    console.info('📁 JSON Performance Summary saved to: test-results/load-results.json\n');
+    console.info('\n📁 HTML Performance Reports saved to: test-results/load-report-<scenario>.html');
+    console.info('📁 JSON Performance Summaries saved to: test-results/load-results-<scenario>.json\n');
 
     if (!allPassed) {
       console.error('❌ One or more performance SLA thresholds were breached.');

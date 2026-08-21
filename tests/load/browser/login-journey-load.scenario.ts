@@ -28,20 +28,16 @@ export async function runBrowserJourneyLoadScenario(
       await loginPage.fill(loginPage.emailInput, 'loadtest-user@test.com', 'Load Test Email');
       await loginPage.fill(loginPage.passwordInput, 'LoadTestPassword123!', 'Load Test Password');
 
-      // Record browser timing to collector
-      runner.getCollector().recordBrowserJourney({
-        journeyName: 'Browser Multi-User Journey',
-        stepName: 'Login-Page-Render',
-        durationMs: navTimings.loadEventMs || 500,
-        timestamp: Date.now(),
-        success: true,
-        vuId: 1,
-        webVitals: {
-          ttfbMs: navTimings.ttfbMs,
-          domContentLoadedMs: navTimings.domContentLoadedMs,
-          loadEventMs: navTimings.loadEventMs,
-        },
-      });
+      const hasRealTimings =
+        navTimings.ttfbMs > 0 || navTimings.domContentLoadedMs > 0 || navTimings.loadEventMs > 0;
+
+      return hasRealTimings
+        ? {
+            ttfbMs: navTimings.ttfbMs || undefined,
+            domContentLoadedMs: navTimings.domContentLoadedMs || undefined,
+            loadEventMs: navTimings.loadEventMs || undefined,
+          }
+        : undefined;
     }
   );
 }

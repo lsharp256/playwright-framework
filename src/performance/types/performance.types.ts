@@ -132,8 +132,10 @@ export type ApiTaskFunction = (context: {
   iteration: number;
 }) => Promise<void>;
 
+export type BrowserWebVitals = BrowserJourneyMetric['webVitals'];
+
 export type BrowserTaskFunction = (context: {
   vuId: number;
   page: Page;
   iteration: number;
-}) => Promise<void>;
+}) => Promise<void | BrowserWebVitals>;

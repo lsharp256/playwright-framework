@@ -24,7 +24,6 @@ export interface UserCredentials {
   username?: string;
   password: string;
   expiresInMins?: number;
-  [key: string]: any;
 }
 
 export interface TestUser {
