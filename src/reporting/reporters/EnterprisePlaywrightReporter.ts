@@ -1,4 +1,11 @@
-import { FullConfig, FullResult, Reporter, Suite, TestCase, TestResult } from '@playwright/test/reporter';
+import {
+  FullConfig,
+  FullResult,
+  Reporter,
+  Suite,
+  TestCase,
+  TestResult,
+} from '@playwright/test/reporter';
 import { HistoricalTracker } from '../analytics/HistoricalTracker.js';
 import { HistoricalDashboardReporter } from './HistoricalDashboardReporter.js';
 import { NotificationManager } from '../notifications/NotificationManager.js';
@@ -64,9 +71,10 @@ export default class EnterprisePlaywrightReporter implements Reporter {
     const branch = process.env.GITHUB_REF_NAME || process.env.GIT_BRANCH || 'local-dev';
     const commitSha = process.env.GITHUB_SHA || process.env.GIT_COMMIT || 'local-head';
     const actor = process.env.GITHUB_ACTOR || process.env.USER || 'Local Runner';
-    const ciRunUrl = process.env.GITHUB_SERVER_URL && process.env.GITHUB_REPOSITORY && process.env.GITHUB_RUN_ID
-      ? `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
-      : undefined;
+    const ciRunUrl =
+      process.env.GITHUB_SERVER_URL && process.env.GITHUB_REPOSITORY && process.env.GITHUB_RUN_ID
+        ? `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
+        : undefined;
 
     const passedCount = this.testRecords.filter((t) => t.status === 'passed').length;
     const failedCount = this.testRecords.filter(

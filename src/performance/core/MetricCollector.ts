@@ -69,7 +69,8 @@ export class MetricCollector {
     const successfulRequests = this.requestMetrics.filter((m) => m.success).length;
     const failedRequests = totalRequests - successfulRequests;
     const errorRatePercent = totalRequests > 0 ? (failedRequests / totalRequests) * 100 : 0;
-    const rps = totalRequests > 0 ? Math.round((totalRequests / totalDurationSeconds) * 10) / 10 : 0;
+    const rps =
+      totalRequests > 0 ? Math.round((totalRequests / totalDurationSeconds) * 10) / 10 : 0;
 
     const durations = this.requestMetrics.map((m) => m.durationMs);
     const latency = this.computeLatencyStats(durations);

@@ -34,10 +34,10 @@ export class HistoricalDashboardReporter {
               s === 'passed'
                 ? '#22c55e'
                 : s === 'flaky'
-                ? '#f59e0b'
-                : s === 'skipped'
-                ? '#94a3b8'
-                : '#ef4444';
+                  ? '#f59e0b'
+                  : s === 'skipped'
+                    ? '#94a3b8'
+                    : '#ef4444';
             return `<span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${color};margin-right:4px;" title="${s}"></span>`;
           })
           .join('');
@@ -66,10 +66,10 @@ export class HistoricalDashboardReporter {
               s === 'passed'
                 ? '#22c55e'
                 : s === 'flaky'
-                ? '#f59e0b'
-                : s === 'skipped'
-                ? '#94a3b8'
-                : '#ef4444';
+                  ? '#f59e0b'
+                  : s === 'skipped'
+                    ? '#94a3b8'
+                    : '#ef4444';
             return `<span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${color};margin-right:4px;" title="${s}"></span>`;
           })
           .join('');

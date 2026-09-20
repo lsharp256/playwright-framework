@@ -250,7 +250,9 @@ export class LoadRunner {
           } catch (err) {
             success = false;
             errorMessage = (err as Error).message;
-            this.logger.warn(`Browser VU #${vuId} error in iteration ${iteration}: ${errorMessage}`);
+            this.logger.warn(
+              `Browser VU #${vuId} error in iteration ${iteration}: ${errorMessage}`
+            );
           }
 
           const durationMs = Date.now() - journeyStart;

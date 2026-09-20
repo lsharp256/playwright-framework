@@ -2,7 +2,10 @@ import { ApiClient } from '../../../src/api/client/ApiClient.js';
 import { UserService } from '../../../src/api/services/UserService.js';
 import { UserFactory } from '../../../src/core/data-generators/userFactory.js';
 import { LoadRunner } from '../../../src/performance/core/LoadRunner.js';
-import { LoadProfileType, PerformanceTestResult } from '../../../src/performance/types/performance.types.js';
+import {
+  LoadProfileType,
+  PerformanceTestResult,
+} from '../../../src/performance/types/performance.types.js';
 
 export async function runUsersCrudLoadScenario(
   runner: LoadRunner,

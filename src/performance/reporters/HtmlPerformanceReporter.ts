@@ -3,10 +3,7 @@ import * as path from 'path';
 import { PerformanceTestResult } from '../types/performance.types.js';
 
 export class HtmlPerformanceReporter {
-  static generateReport(
-    result: PerformanceTestResult,
-    outputFilePath?: string
-  ): string {
+  static generateReport(result: PerformanceTestResult, outputFilePath?: string): string {
     const { scenarioName, profile, vus, summary, slaResult, startTime, endTime } = result;
 
     const scenarioSlug = scenarioName

@@ -1,7 +1,10 @@
 import { ApiClient } from '../../../src/api/client/ApiClient.js';
 import { AuthService } from '../../../src/api/services/AuthService.js';
 import { LoadRunner } from '../../../src/performance/core/LoadRunner.js';
-import { LoadProfileType, PerformanceTestResult } from '../../../src/performance/types/performance.types.js';
+import {
+  LoadProfileType,
+  PerformanceTestResult,
+} from '../../../src/performance/types/performance.types.js';
 
 export async function runAuthLoadScenario(
   runner: LoadRunner,

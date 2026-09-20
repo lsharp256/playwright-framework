@@ -104,7 +104,9 @@ export class HistoricalTracker {
       const sample = testRecords[testRecords.length - 1];
       const totalRuns = testRecords.length;
       const passedRuns = testRecords.filter((t) => t.status === 'passed').length;
-      const failedRuns = testRecords.filter((t) => t.status === 'failed' || t.status === 'timedOut').length;
+      const failedRuns = testRecords.filter(
+        (t) => t.status === 'failed' || t.status === 'timedOut'
+      ).length;
       const flakyRuns = testRecords.filter((t) => t.status === 'flaky' || t.retryCount > 0).length;
 
       const passRatePercent = Math.round((passedRuns / totalRuns) * 100);
@@ -160,7 +162,11 @@ export class HistoricalTracker {
     // Sort frequently failing by failure rate descending and consecutive failures descending
     const frequentlyFailingTests = allTestStats
       .filter((t) => t.isFrequentlyFailing)
-      .sort((a, b) => b.consecutiveFailures - a.consecutiveFailures || b.failureRatePercent - a.failureRatePercent);
+      .sort(
+        (a, b) =>
+          b.consecutiveFailures - a.consecutiveFailures ||
+          b.failureRatePercent - a.failureRatePercent
+      );
 
     // Sort flaky tests by flaky runs count descending
     const flakyTests = allTestStats

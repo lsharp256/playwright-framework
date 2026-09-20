@@ -32,12 +32,16 @@ const envSchema = z.object({
   LOAD_TEST_RAMP_UP: z.preprocess((val) => (val ? Number(val) : 5), z.number()).default(5),
   LOAD_TEST_SLA_P95_MS: z.preprocess((val) => (val ? Number(val) : 1000), z.number()).default(1000),
   LOAD_TEST_SLA_P99_MS: z.preprocess((val) => (val ? Number(val) : 2000), z.number()).default(2000),
-  LOAD_TEST_SLA_ERROR_RATE: z.preprocess((val) => (val ? Number(val) : 1.0), z.number()).default(1.0),
+  LOAD_TEST_SLA_ERROR_RATE: z
+    .preprocess((val) => (val ? Number(val) : 1.0), z.number())
+    .default(1.0),
   // Notifications & Reporting
   SLACK_WEBHOOK_URL: z.string().url().optional().or(z.literal('')),
   TEAMS_WEBHOOK_URL: z.string().url().optional().or(z.literal('')),
   SLACK_CHANNEL: z.string().optional(),
-  NOTIFY_ON_FAILURE_ONLY: z.preprocess((val) => val === 'true' || val === true, z.boolean()).default(false),
+  NOTIFY_ON_FAILURE_ONLY: z
+    .preprocess((val) => val === 'true' || val === true, z.boolean())
+    .default(false),
   HISTORY_RETENTION_RUNS: z.preprocess((val) => (val ? Number(val) : 50), z.number()).default(50),
 });
 

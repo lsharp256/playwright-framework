@@ -7,7 +7,9 @@ export class ConsoleReporter {
 
     console.info('\n' + '='.repeat(70));
     console.info(`🚀 PERFORMANCE / LOAD TEST RESULTS: ${scenarioName.toUpperCase()}`);
-    console.info(`   Profile: ${profile} | Concurrent VUs: ${vus} | Duration: ${summary.durationSeconds}s`);
+    console.info(
+      `   Profile: ${profile} | Concurrent VUs: ${vus} | Duration: ${summary.durationSeconds}s`
+    );
     console.info('='.repeat(70) + '\n');
 
     // 1. Core KPIs Table
@@ -66,8 +68,11 @@ export class ConsoleReporter {
     Object.entries(summary.statusCodes).forEach(([code, count]) => {
       const pct =
         summary.totalRequests > 0 ? ((count / summary.totalRequests) * 100).toFixed(1) : '0';
-      const color =
-        code.startsWith('2') ? '\x1b[32m' : code.startsWith('3') ? '\x1b[36m' : '\x1b[31m';
+      const color = code.startsWith('2')
+        ? '\x1b[32m'
+        : code.startsWith('3')
+          ? '\x1b[36m'
+          : '\x1b[31m';
       statusTable.push([`${color}${code}\x1b[0m`, count.toLocaleString(), `${pct}%`]);
     });
 

@@ -23,7 +23,7 @@
     "test:load:browser": "cross-env TSX_TSCONFIG_PATH=tsconfig.json tsx scripts/run-load-test.ts --type=browser",
     "test:load:stress": "cross-env TSX_TSCONFIG_PATH=tsconfig.json tsx scripts/run-load-test.ts --profile=stress",
     "test:load:spike": "cross-env TSX_TSCONFIG_PATH=tsconfig.json tsx scripts/run-load-test.ts --profile=spike",
-    "test:load:artillery": "artillery run tests/load/scenarios/artillery-api.yml --output test-results/artillery-report.json",
+    "test:load:artillery": "artillery run -t ${ARTILLERY_TARGET:-https://dummyjson.com} tests/load/scenarios/artillery-api.yml --output test-results/artillery-report.json",
     "test:load:artillery:report": "cross-env TSX_TSCONFIG_PATH=tsconfig.json tsx scripts/generate-artillery-report.ts",
     "report": "playwright show-report",
     "report:allure": "allure generate allure-results --clean -o allure-report && allure open allure-report",

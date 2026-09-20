@@ -67,15 +67,21 @@ jobs:
         if: ${{ github.event.inputs.test_type == 'browser' || github.event.inputs.test_type == 'all' }}
         run: npx playwright install --with-deps chromium
 
+      - name: Start Local Mock API (dummyjson-compatible)
+        run: node tests/load/mock/wait-for-mock.mjs
+
       - name: Run Native Performance Suite
         if: ${{ github.event.inputs.test_type != 'artillery' }}
         env:
           TEST_ENV: ${{ github.event.inputs.environment || 'dev' }}
+          API_URL: http://localhost:3000
         run: |
           npm run test:load -- --type=${{ github.event.inputs.test_type || 'api' }} --profile=${{ github.event.inputs.profile || 'load' }} --vus=${{ github.event.inputs.vus || '10' }} --duration=${{ github.event.inputs.duration || '20' }}
 
       - name: Run Artillery Performance Suite
         if: ${{ github.event.inputs.test_type == 'artillery' }}
+        env:
+          ARTILLERY_TARGET: http://localhost:3000
         run: |
           npm run test:load:artillery
           npm run test:load:artillery:report
